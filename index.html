@@ -1,0 +1,2354 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Node.js Academy : cours académique, exemples et projets pratiques pour apprendre Node.js.">
+<title>Node.js Academy — Apprendre et construire</title>
+
+<style>
+:root {
+  --bg: #f5f7f5;
+  --surface: #ffffff;
+  --surface-2: #edf3ef;
+  --text: #17231c;
+  --muted: #68766d;
+  --green: #438b60;
+  --green-dark: #286341;
+  --green-light: #dff1e5;
+  --border: #dfe8e1;
+  --code: #17251e;
+  --sidebar: 270px;
+  --radius: 16px;
+  --shadow: 0 8px 30px rgba(25, 55, 35, .06);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+}
+
+button, input { font: inherit; }
+
+button { cursor: pointer; }
+
+a { color: inherit; text-decoration: none; }
+
+.app { min-height: 100vh; }
+
+/* HEADER */
+
+.topbar {
+  height: 70px;
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  background: rgba(255,255,255,.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -.5px;
+}
+
+.brand-icon {
+  width: 39px;
+  height: 39px;
+  background: #438b60;
+  color: white;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.brand span { color: var(--green); }
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.top-progress {
+  width: 130px;
+  height: 7px;
+  background: var(--surface-2);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.top-progress div {
+  height: 100%;
+  width: 0;
+  background: var(--green);
+  transition: width .3s;
+}
+
+.progress-label {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.menu-btn {
+  display: none;
+  border: 0;
+  background: var(--surface-2);
+  padding: 9px 12px;
+  border-radius: 9px;
+  font-size: 20px;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  position: fixed;
+  top: 70px;
+  bottom: 0;
+  left: 0;
+  width: var(--sidebar);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 25px 17px;
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.sidebar-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  color: #94a197;
+  padding: 0 12px;
+  margin: 22px 0 10px;
+}
+
+.sidebar-label:first-child { margin-top: 0; }
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  margin: 3px 0;
+  border-radius: 9px;
+  color: #536258;
+  font-size: 13px;
+  font-weight: 600;
+  transition: .2s;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  background: var(--surface-2);
+  color: var(--green-dark);
+}
+
+.nav-link.active {
+  background: var(--green-light);
+  color: var(--green-dark);
+  font-weight: 800;
+}
+
+.nav-number {
+  width: 23px;
+  height: 23px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.nav-link.active .nav-number {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+
+.nav-check {
+  margin-left: auto;
+  color: var(--green);
+}
+
+/* MAIN */
+
+.main {
+  margin-left: var(--sidebar);
+  padding: 105px 45px 60px;
+  max-width: 1500px;
+}
+
+.content {
+  max-width: 1050px;
+  margin: auto;
+}
+
+.breadcrumb {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.hero {
+  background: #173e2a;
+  color: white;
+  border-radius: 22px;
+  padding: 42px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 35px;
+}
+
+.hero::after {
+  content: "JS";
+  position: absolute;
+  right: 45px;
+  top: 10px;
+  font-size: 180px;
+  font-weight: 900;
+  color: rgba(255,255,255,.055);
+  line-height: 1;
+}
+
+.hero-tag {
+  display: inline-block;
+  background: rgba(255,255,255,.13);
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.hero h1 {
+  font-size: clamp(30px, 5vw, 48px);
+  line-height: 1.15;
+  max-width: 650px;
+  letter-spacing: -1.5px;
+  margin-bottom: 15px;
+}
+
+.hero p {
+  max-width: 610px;
+  color: #d0e3d5;
+  font-size: 15px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 25px;
+}
+
+.btn {
+  border: 0;
+  border-radius: 9px;
+  padding: 11px 17px;
+  font-weight: 750;
+  font-size: 13px;
+  transition: .2s;
+}
+
+.btn-primary {
+  background: #a6e0b6;
+  color: #163d27;
+}
+
+.btn-primary:hover { background: #c0edcc; transform: translateY(-2px); }
+
+.btn-light {
+  background: rgba(255,255,255,.12);
+  color: white;
+  border: 1px solid rgba(255,255,255,.2);
+}
+
+.btn-light:hover { background: rgba(255,255,255,.2); }
+
+.btn-green {
+  background: var(--green);
+  color: white;
+}
+
+.btn-green:hover { background: var(--green-dark); }
+
+.btn-outline {
+  background: white;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.btn-outline:hover { background: var(--surface-2); }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 14px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 17px;
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 25px;
+  color: var(--green-dark);
+}
+
+.stat-card span {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 650;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 32px 0 17px;
+}
+
+.section-heading h2 {
+  font-size: 21px;
+  letter-spacing: -.5px;
+}
+
+.section-heading p {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* SEARCH */
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.search-box input {
+  width: 100%;
+  border: 0;
+  outline: none;
+  color: var(--text);
+  background: transparent;
+  font-size: 13px;
+}
+
+/* COURSE CARDS */
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 13px;
+}
+
+.course-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 17px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.course-card:hover {
+  border-color: #91c6a1;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.course-icon {
+  width: 42px;
+  height: 42px;
+  background: var(--green-light);
+  color: var(--green-dark);
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.course-card h3 { font-size: 14px; margin-bottom: 4px; }
+
+.course-card p {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.course-card small {
+  display: inline-block;
+  color: var(--green-dark);
+  font-size: 10px;
+  margin-top: 8px;
+  font-weight: 800;
+}
+
+/* LESSON */
+
+.lesson-header {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 25px;
+}
+
+.lesson-kicker {
+  color: var(--green);
+  font-weight: 800;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.lesson-header h1 {
+  font-size: clamp(27px,4vw,38px);
+  line-height: 1.2;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+}
+
+.lesson-header p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.lesson-meta {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-top: 17px;
+}
+
+.meta-pill {
+  background: var(--surface-2);
+  color: #506258;
+  border-radius: 30px;
+  padding: 5px 11px;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.lesson-body h2 {
+  font-size: 21px;
+  margin: 30px 0 12px;
+  letter-spacing: -.4px;
+}
+
+.lesson-body h3 {
+  font-size: 16px;
+  margin: 23px 0 9px;
+}
+
+.lesson-body p {
+  color: #45534a;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+.lesson-body ul, .lesson-body ol {
+  padding-left: 23px;
+  color: #45534a;
+  font-size: 13px;
+  margin: 12px 0;
+}
+
+.lesson-body li { margin: 7px 0; }
+
+.info-box {
+  border-left: 4px solid var(--green);
+  background: #eaf4ed;
+  padding: 16px 18px;
+  border-radius: 0 10px 10px 0;
+  margin: 19px 0;
+}
+
+.info-box strong {
+  display: block;
+  font-size: 13px;
+  color: var(--green-dark);
+  margin-bottom: 5px;
+}
+
+.info-box p { margin: 0; font-size: 12px; }
+
+.warning-box {
+  border-left-color: #d39a37;
+  background: #fff7e8;
+}
+
+.warning-box strong { color: #936317; }
+
+.code-block {
+  background: var(--code);
+  color: #d9eadf;
+  border-radius: 12px;
+  margin: 17px 0;
+  overflow: hidden;
+}
+
+.code-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  color: #a9c4b2;
+  font-size: 11px;
+}
+
+.copy-btn {
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.08);
+  color: white;
+  border-radius: 6px;
+  padding: 5px 9px;
+  font-size: 10px;
+}
+
+.copy-btn:hover { background: rgba(255,255,255,.18); }
+
+.code-block pre {
+  padding: 18px;
+  overflow-x: auto;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  white-space: pre;
+}
+
+.lesson-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 35px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+/* PROJECTS */
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 15px;
+}
+
+.project-card {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 21px;
+  border-radius: 14px;
+}
+
+.project-card .project-number {
+  font-size: 11px;
+  font-weight: 850;
+  color: var(--green);
+}
+
+.project-card h3 { margin: 8px 0; font-size: 17px; }
+
+.project-card p { color: var(--muted); font-size: 12px; }
+
+.project-card ul {
+  padding-left: 18px;
+  font-size: 12px;
+  margin: 13px 0;
+  color: #4c5a50;
+}
+
+.project-card button { margin-top: 10px; }
+
+/* QUIZ */
+
+.quiz-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 23px;
+  margin: 16px 0;
+}
+
+.quiz-question {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.quiz-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 11px 13px;
+  margin: 8px 0;
+  background: white;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.quiz-option:hover { background: var(--surface-2); }
+
+.quiz-option.correct {
+  border-color: #55a66e;
+  background: #e5f5e9;
+}
+
+.quiz-option.wrong {
+  border-color: #d77d7d;
+  background: #fff0f0;
+}
+
+.quiz-feedback {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 12px;
+}
+
+.quiz-result {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--green-dark);
+  margin-top: 15px;
+}
+
+/* FOOTER */
+
+.footer {
+  border-top: 1px solid var(--border);
+  margin-top: 55px;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  color: var(--muted);
+  font-size: 11px;
+  flex-wrap: wrap;
+}
+
+.empty-state {
+  padding: 35px;
+  text-align: center;
+  color: var(--muted);
+  background: white;
+  border-radius: 12px;
+  border: 1px dashed var(--border);
+}
+
+.hidden { display: none !important; }
+
+/* RESPONSIVE */
+
+@media(max-width: 950px) {
+  :root { --sidebar: 235px; }
+  .main { padding-left: 25px; padding-right: 25px; }
+}
+
+@media(max-width: 700px) {
+  .topbar { padding: 0 15px; height: 62px; }
+  .brand { font-size: 16px; }
+  .brand-icon { width: 34px; height: 34px; }
+  .top-progress { width: 65px; }
+  .menu-btn { display: block; }
+  .sidebar {
+    top: 62px;
+    width: 275px;
+    transform: translateX(-100%);
+    transition: transform .25s;
+    box-shadow: var(--shadow);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main {
+    margin-left: 0;
+    padding: 87px 15px 40px;
+  }
+  .hero { padding: 28px 22px; }
+  .hero::after { right: 10px; font-size: 110px; }
+  .stats { grid-template-columns: repeat(2,1fr); }
+  .course-grid, .project-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 32px; }
+  .section-heading h2 { font-size: 18px; }
+}
+
+@media(max-width: 380px) {
+  .progress-label { display: none; }
+  .top-progress { width: 50px; }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-icon">JS</div>
+    Node<span>.js</span> Academy
+  </div>
+
+  <div class="topbar-right">
+    <span class="progress-label" id="progressText">0% terminé</span>
+    <div class="top-progress"><div id="topProgressBar"></div></div>
+    <button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu">☰</button>
+  </div>
+</header>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-label">ESPACE APPRENTISSAGE</div>
+  <div class="nav-link active" data-page="home">
+    <span>⌂</span> Tableau de bord
+  </div>
+
+  <div class="sidebar-label">PROGRAMME DU COURS</div>
+  <div id="lessonNav"></div>
+
+  <div class="sidebar-label">MISE EN PRATIQUE</div>
+  <div class="nav-link" data-page="projects">
+    <span>▣</span> Projets pratiques
+  </div>
+  <div class="nav-link" data-page="quiz">
+    <span>✓</span> Quiz et évaluation
+  </div>
+
+  <div class="sidebar-label">RESSOURCES</div>
+  <div class="nav-link" data-page="glossary">
+    <span>▤</span> Glossaire
+  </div>
+</aside>
+
+<main class="main">
+<div class="content">
+
+<!-- HOME -->
+<section id="homePage">
+
+  <div class="breadcrumb">Accueil / Formation Node.js</div>
+
+  <div class="hero">
+    <div class="hero-tag">FORMATION COMPLÈTE • JAVASCRIPT BACKEND</div>
+    <h1>Construisez le Web côté serveur avec Node.js.</h1>
+    <p>
+      Découvrez l'environnement Node.js, maîtrisez la programmation
+      asynchrone, créez des serveurs et développez des API REST
+      à travers un parcours académique et des projets concrets.
+    </p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" onclick="openLesson(0)">
+        Commencer le cours →
+      </button>
+      <button class="btn btn-light" onclick="showPage('projects')">
+        Découvrir les projets
+      </button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <strong>12</strong>
+      <span>Chapitres académiques</span>
+    </div>
+    <div class="stat-card">
+      <strong>04</strong>
+      <span>Projets pratiques</span>
+    </div>
+    <div class="stat-card">
+      <strong>01</strong>
+      <span>Parcours progressif</span>
+    </div>
+    <div class="stat-card">
+      <strong id="completedCount">0/12</strong>
+      <span>Chapitres terminés</span>
+    </div>
+  </div>
+
+  <div class="section-heading">
+    <div>
+      <h2>Programme de formation</h2>
+      <p>Un parcours organisé du niveau débutant au niveau avancé.</p>
+    </div>
+  </div>
+
+  <div class="search-box">
+    <span>⌕</span>
+    <input id="searchInput" type="search"
+      placeholder="Rechercher un chapitre, une notion...">
+  </div>
+
+  <div class="course-grid" id="courseGrid"></div>
+
+  <div class="footer">
+    <span>Node.js Academy — Apprendre, comprendre, construire.</span>
+    <span>Formation pédagogique</span>
+  </div>
+</section>
+
+<!-- LESSON -->
+<section id="lessonPage" class="hidden">
+  <div class="breadcrumb">Accueil / Programme / <span id="lessonBreadcrumb"></span></div>
+  <div id="lessonContent"></div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projectsPage" class="hidden">
+  <div class="lesson-header">
+    <div class="lesson-kicker">APPLICATION PRATIQUE</div>
+    <h1>Projets pratiques</h1>
+    <p>Transformez les notions théoriques en compétences techniques.</p>
+  </div>
+  <div id="projectList" class="project-grid"></div>
+</section>
+
+<!-- QUIZ -->
+<section id="quizPage" class="hidden">
+  <div class="lesson-header">
+    <div class="lesson-kicker">ÉVALUATION</div>
+    <h1>Quiz Node.js</h1>
+    <p>Vérifiez votre compréhension des notions fondamentales.</p>
+  </div>
+  <div id="quizContainer"></div>
+</section>
+
+<!-- GLOSSARY -->
+<section id="glossaryPage" class="hidden">
+  <div class="lesson-header">
+    <div class="lesson-kicker">RESSOURCES</div>
+    <h1>Glossaire technique</h1>
+    <p>Les termes importants à connaître pendant votre apprentissage.</p>
+  </div>
+  <div id="glossaryContent"></div>
+</section>
+
+</div>
+</main>
+</div>
+
+<script>
+/* =========================================
+   DONNÉES DES 12 CHAPITRES
+========================================= */
+
+const lessons = [
+
+{
+title: "Introduction à Node.js",
+subtitle: "Comprendre Node.js, son fonctionnement et ses domaines d'utilisation.",
+level: "Débutant",
+duration: "35 min",
+sections: [
+{
+title: "1. Qu'est-ce que Node.js ?",
+text: "Node.js est un environnement d'exécution JavaScript open source et multiplateforme. Il permet d'exécuter du JavaScript en dehors du navigateur, notamment sur un serveur.",
+code: `console.log("Bonjour depuis Node.js !");
+console.log("JavaScript côté serveur");`,
+explanation: "La fonction console.log() affiche un message dans le terminal. Contrairement au navigateur, ce code est exécuté directement par Node.js."
+},
+{
+title: "2. Node.js et JavaScript",
+text: "JavaScript est un langage de programmation. Node.js est un environnement qui permet d'exécuter ce langage sur une machine, sans navigateur.",
+list: [
+"JavaScript : langage de programmation.",
+"Node.js : environnement d'exécution.",
+"V8 : moteur JavaScript utilisé par Node.js.",
+"npm : gestionnaire de paquets généralement fourni avec Node.js."
+]
+},
+{
+title: "3. Pourquoi utiliser Node.js ?",
+text: "Node.js est particulièrement adapté aux applications réseau et aux applications qui réalisent de nombreuses opérations d'entrée-sortie.",
+list: [
+"Développement de serveurs web.",
+"Création d'API REST.",
+"Applications en temps réel.",
+"Scripts d'automatisation.",
+"Outils en ligne de commande."
+]
+},
+{
+title: "4. Premier programme",
+text: "Créez un fichier appelé app.js et écrivez le code suivant.",
+code: `const message = "Bienvenue dans Node.js";
+
+console.log(message);
+
+const a = 10;
+const b = 20;
+
+console.log("Résultat :", a + b);`,
+explanation: "Le fichier .js contient du JavaScript. Node.js lit et exécute les instructions dans l'ordre."
+}
+],
+objective: "Comprendre le rôle de Node.js et savoir exécuter un premier programme."
+},
+
+{
+title: "Installation et configuration",
+subtitle: "Préparer l'environnement de développement Node.js.",
+level: "Débutant",
+duration: "40 min",
+sections: [
+{
+title: "1. Installation",
+text: "Téléchargez Node.js depuis le site officiel : https://nodejs.org. Pour un projet classique, privilégiez une version LTS compatible avec vos dépendances.",
+list: [
+"Télécharger l'installateur adapté à votre système.",
+"Exécuter l'installation.",
+"Redémarrer le terminal si nécessaire.",
+"Vérifier que Node.js et npm sont disponibles."
+]
+},
+{
+title: "2. Vérifier l'installation",
+code: `node --version
+npm --version`,
+explanation: "Ces commandes affichent les versions installées. Si une commande n'est pas reconnue, vérifiez l'installation et la variable PATH."
+},
+{
+title: "3. Exécuter un fichier JavaScript",
+code: `// Fichier : app.js
+
+console.log("Mon environnement fonctionne !");`,
+explanation: "Dans le terminal, placez-vous dans le dossier du projet puis exécutez : node app.js."
+},
+{
+title: "4. L'environnement de travail",
+text: "Un projet Node.js peut être développé avec Visual Studio Code ou un autre éditeur de code.",
+list: [
+"Un éditeur pour écrire le code.",
+"Un terminal pour exécuter les commandes.",
+"Node.js pour exécuter JavaScript.",
+"npm pour installer les dépendances."
+]
+}
+],
+objective: "Installer Node.js et exécuter un fichier depuis le terminal."
+},
+
+{
+title: "JavaScript pour Node.js",
+subtitle: "Réviser les éléments fondamentaux de JavaScript.",
+level: "Débutant",
+duration: "60 min",
+sections: [
+{
+title: "1. Variables et constantes",
+text: "JavaScript utilise let et const pour déclarer des variables. const est à privilégier lorsque la référence ne doit pas être réaffectée.",
+code: `const nom = "Mohamed";
+let age = 20;
+
+age = 21;
+
+console.log(nom);
+console.log(age);`
+},
+{
+title: "2. Fonctions",
+code: `function addition(a, b) {
+  return a + b;
+}
+
+const resultat = addition(5, 3);
+
+console.log(resultat);`,
+explanation: "Une fonction regroupe des instructions réutilisables. return renvoie une valeur au code appelant."
+},
+{
+title: "3. Tableaux et objets",
+code: `const etudiant = {
+  nom: "Ali",
+  age: 20,
+  specialite: "Informatique"
+};
+
+const notes = [14, 16, 12];
+
+console.log(etudiant.nom);
+console.log(notes[0]);`,
+explanation: "Un objet stocke des propriétés sous forme clé-valeur. Un tableau stocke une collection ordonnée d'éléments."
+},
+{
+title: "4. Conditions et boucles",
+code: `const note = 15;
+
+if (note >= 10) {
+  console.log("Admis");
+} else {
+  console.log("Non admis");
+}
+
+for (let i = 0; i < 3; i++) {
+  console.log(i);
+}`
+},
+{
+title: "5. Modules JavaScript",
+text: "Les modules permettent de séparer un programme en plusieurs fichiers et de réutiliser le code."
+}
+],
+objective: "Maîtriser les bases JavaScript nécessaires au développement backend."
+},
+
+{
+title: "Modules et système de fichiers",
+subtitle: "Organiser le code et manipuler les fichiers.",
+level: "Débutant",
+duration: "55 min",
+sections: [
+{
+title: "1. Le système de modules",
+text: "Un module est un fichier qui expose des fonctionnalités pouvant être utilisées dans d'autres fichiers."
+},
+{
+title: "2. Modules CommonJS",
+text: "CommonJS utilise require() pour importer et module.exports pour exporter.",
+code: `// fichier : calcul.js
+
+function addition(a, b) {
+  return a + b;
+}
+
+module.exports = { addition };`
+},
+{
+title: "3. Importer un module",
+code: `// fichier : app.js
+
+const calcul = require("./calcul");
+
+console.log(calcul.addition(10, 5));`,
+explanation: "require() charge le module calcul.js. Le chemin relatif commence par ./."
+},
+{
+title: "4. Module File System",
+text: "Le module fs permet de lire, créer, modifier et supprimer des fichiers.",
+code: `const fs = require("node:fs");
+
+fs.writeFileSync(
+  "message.txt",
+  "Bonjour Node.js !"
+);
+
+const contenu = fs.readFileSync(
+  "message.txt",
+  "utf8"
+);
+
+console.log(contenu);`,
+explanation: "writeFileSync() écrit un fichier de manière synchrone. readFileSync() lit son contenu. Ces méthodes bloquent le thread pendant l'opération."
+},
+{
+title: "5. Version asynchrone",
+code: `const fs = require("node:fs/promises");
+
+async function lireFichier() {
+  try {
+    const contenu = await fs.readFile(
+      "message.txt",
+      "utf8"
+    );
+
+    console.log(contenu);
+  } catch (erreur) {
+    console.error("Erreur :", erreur.message);
+  }
+}
+
+lireFichier();`,
+explanation: "La version basée sur les promesses permet d'attendre une opération sans bloquer le thread principal pendant son attente."
+}
+],
+objective: "Créer des modules et manipuler les fichiers avec fs."
+},
+
+{
+title: "NPM et gestion des packages",
+subtitle: "Installer et organiser les dépendances d'un projet.",
+level: "Intermédiaire",
+duration: "45 min",
+sections: [
+{
+title: "1. Qu'est-ce que NPM ?",
+text: "NPM est le gestionnaire de paquets utilisé dans l'écosystème Node.js. Il permet d'installer des bibliothèques et de gérer les dépendances."
+},
+{
+title: "2. Initialiser un projet",
+code: `mkdir mon-projet
+cd mon-projet
+npm init -y`,
+explanation: "La commande npm init -y crée un fichier package.json avec des valeurs par défaut."
+},
+{
+title: "3. Installer un package",
+code: `npm install express`,
+explanation: "Cette commande installe Express comme dépendance du projet et met à jour package.json et le fichier de verrouillage."
+},
+{
+title: "4. package.json",
+code: `{
+  "name": "mon-projet",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  }
+}`,
+explanation: "package.json contient les informations du projet, ses scripts et ses dépendances."
+},
+{
+title: "5. Exécuter un script",
+code: `npm start
+npm run dev`,
+explanation: "npm start exécute le script start. Pour les autres scripts, on utilise npm run suivi du nom du script."
+}
+],
+objective: "Initialiser un projet et gérer ses dépendances avec npm."
+},
+
+{
+title: "Programmation asynchrone",
+subtitle: "Comprendre les callbacks, les promesses et async/await.",
+level: "Intermédiaire",
+duration: "65 min",
+sections: [
+{
+title: "1. Synchrone et asynchrone",
+text: "Une opération synchrone s'exécute dans l'ordre et son résultat est attendu avant de continuer. Une opération asynchrone permet au programme de poursuivre son travail pendant qu'une opération d'entrée-sortie est en attente."
+},
+{
+title: "2. Les callbacks",
+code: `function terminer(callback) {
+  console.log("Opération terminée");
+  callback();
+}
+
+terminer(function () {
+  console.log("Callback exécuté");
+});`,
+explanation: "Un callback est une fonction transmise à une autre fonction afin d'être appelée ultérieurement."
+},
+{
+title: "3. Les Promises",
+code: `const operation = new Promise((resolve, reject) => {
+  const succes = true;
+
+  if (succes) {
+    resolve("Opération réussie");
+  } else {
+    reject(new Error("Échec"));
+  }
+});
+
+operation
+  .then(resultat => console.log(resultat))
+  .catch(erreur => console.error(erreur.message));`,
+explanation: "Une Promise représente le résultat futur d'une opération. Elle peut être en attente, accomplie ou rejetée."
+},
+{
+title: "4. async et await",
+code: `function obtenirDonnees() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve("Données reçues");
+    }, 1000);
+  });
+}
+
+async function main() {
+  try {
+    const resultat = await obtenirDonnees();
+    console.log(resultat);
+  } catch (erreur) {
+    console.error(erreur);
+  }
+}
+
+main();`,
+explanation: "async déclare une fonction asynchrone. await attend la résolution d'une Promise à l'intérieur de cette fonction."
+},
+{
+title: "5. Gestion des erreurs",
+text: "Utilisez try/catch pour traiter les erreurs dans les fonctions asynchrones utilisant await. Une opération asynchrone doit toujours prévoir le cas d'un échec."
+}
+],
+objective: "Comprendre et utiliser les principales techniques de programmation asynchrone."
+},
+
+{
+title: "Création de serveurs HTTP",
+subtitle: "Créer un serveur web avec le module natif http.",
+level: "Intermédiaire",
+duration: "55 min",
+sections: [
+{
+title: "1. Le protocole HTTP",
+text: "HTTP est un protocole de communication utilisé entre un client et un serveur. Le client envoie une requête et le serveur renvoie une réponse."
+},
+{
+title: "2. Créer un serveur",
+code: `const http = require("node:http");
+
+const serveur = http.createServer((req, res) => {
+  res.writeHead(200, {
+    "Content-Type": "text/plain; charset=utf-8"
+  });
+
+  res.end("Bonjour depuis mon serveur !");
+});
+
+serveur.listen(3000, () => {
+  console.log("Serveur sur http://localhost:3000");
+});`,
+explanation: "createServer() crée un serveur HTTP. listen() démarre l'écoute sur le port 3000."
+},
+{
+title: "3. Comprendre la requête",
+code: `const http = require("node:http");
+
+const serveur = http.createServer((req, res) => {
+  console.log("Méthode :", req.method);
+  console.log("URL :", req.url);
+
+  res.writeHead(200, {
+    "Content-Type": "text/plain"
+  });
+
+  res.end("Requête reçue");
+});
+
+serveur.listen(3000);`,
+explanation: "req.method contient la méthode HTTP et req.url contient le chemin demandé."
+},
+{
+title: "4. Gérer plusieurs routes",
+code: `const http = require("node:http");
+
+const serveur = http.createServer((req, res) => {
+  if (req.url === "/" && req.method === "GET") {
+    res.writeHead(200, {
+      "Content-Type": "text/plain"
+    });
+    res.end("Accueil");
+  } else if (req.url === "/about" && req.method === "GET") {
+    res.writeHead(200, {
+      "Content-Type": "text/plain"
+    });
+    res.end("À propos");
+  } else {
+    res.writeHead(404);
+    res.end("Page introuvable");
+  }
+});
+
+serveur.listen(3000);`
+},
+{
+title: "5. Les codes de statut",
+list: [
+"200 : OK, requête réussie.",
+"201 : Created, ressource créée.",
+"400 : Bad Request, requête incorrecte.",
+"401 : Unauthorized, authentification nécessaire.",
+"403 : Forbidden, accès refusé.",
+"404 : Not Found, ressource introuvable.",
+"500 : Internal Server Error, erreur serveur."
+]
+}
+],
+objective: "Créer un serveur HTTP et gérer des routes simples."
+},
+
+{
+title: "Introduction à Express.js",
+subtitle: "Simplifier la création de serveurs avec Express.",
+level: "Intermédiaire",
+duration: "60 min",
+sections: [
+{
+title: "1. Qu'est-ce qu'Express ?",
+text: "Express.js est un framework web minimaliste pour Node.js. Il facilite la gestion des routes, des requêtes, des réponses et des middlewares."
+},
+{
+title: "2. Installer Express",
+code: `npm init -y
+npm install express`,
+explanation: "L'installation doit être effectuée dans le dossier du projet."
+},
+{
+title: "3. Premier serveur Express",
+code: `const express = require("express");
+
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Bienvenue sur mon serveur !");
+});
+
+app.listen(3000, () => {
+  console.log("Serveur démarré sur le port 3000");
+});`,
+explanation: "express() crée l'application. app.get() définit une route GET. app.listen() démarre le serveur."
+},
+{
+title: "4. Les méthodes HTTP",
+list: [
+"GET : récupérer une ressource.",
+"POST : créer une ressource.",
+"PUT : remplacer une ressource.",
+"PATCH : modifier partiellement une ressource.",
+"DELETE : supprimer une ressource."
+]
+},
+{
+title: "5. Retourner du JSON",
+code: `const express = require("express");
+
+const app = express();
+
+app.get("/api/etudiant", (req, res) => {
+  res.json({
+    nom: "Ali",
+    specialite: "Informatique"
+  });
+});
+
+app.listen(3000);`,
+explanation: "res.json() envoie une réponse au format JSON."
+}
+],
+objective: "Créer une application Express et définir ses premières routes."
+},
+
+{
+title: "Routes et Middlewares",
+subtitle: "Structurer les routes et traiter les requêtes.",
+level: "Intermédiaire",
+duration: "60 min",
+sections: [
+{
+title: "1. Qu'est-ce qu'une route ?",
+text: "Une route associe une méthode HTTP et un chemin à une fonction qui traite la requête."
+},
+{
+title: "2. Les paramètres d'URL",
+code: `app.get("/users/:id", (req, res) => {
+  const id = req.params.id;
+
+  res.json({ utilisateurId: id });
+});`,
+explanation: "req.params permet de récupérer les paramètres dynamiques présents dans le chemin."
+},
+{
+title: "3. Les paramètres de requête",
+code: `// Exemple : /recherche?nom=Ali
+
+app.get("/recherche", (req, res) => {
+  const nom = req.query.nom;
+
+  res.json({ recherche: nom });
+});`,
+explanation: "req.query contient les paramètres transmis après le symbole ? dans l'URL."
+},
+{
+title: "4. Comprendre les middlewares",
+text: "Un middleware est une fonction qui intervient pendant le traitement d'une requête. Il peut lire ou modifier la requête, envoyer une réponse ou transmettre le contrôle au middleware suivant."
+},
+{
+title: "5. Créer un middleware",
+code: `const express = require("express");
+const app = express();
+
+app.use((req, res, next) => {
+  console.log(req.method, req.url);
+  next();
+});
+
+app.get("/", (req, res) => {
+  res.send("Accueil");
+});
+
+app.listen(3000);`,
+explanation: "next() transmet le contrôle au middleware suivant. Sans réponse ni next(), la requête peut rester bloquée."
+},
+{
+title: "6. Lire le JSON envoyé par le client",
+code: `app.use(express.json());
+
+app.post("/users", (req, res) => {
+  const utilisateur = req.body;
+
+  res.status(201).json(utilisateur);
+});`,
+explanation: "express.json() analyse les requêtes contenant un corps JSON et rend les données accessibles dans req.body."
+}
+],
+objective: "Gérer les paramètres, les routes et les middlewares Express."
+},
+
+{
+title: "Création d'API REST",
+subtitle: "Concevoir une API structurée et respecter les conventions REST.",
+level: "Avancé",
+duration: "70 min",
+sections: [
+{
+title: "1. Définition d'une API",
+text: "Une API (Application Programming Interface) permet à plusieurs applications de communiquer entre elles. Une API REST utilise les ressources et les méthodes HTTP pour organiser les échanges."
+},
+{
+title: "2. Exemple de ressources",
+code: `GET    /api/users
+GET    /api/users/5
+POST   /api/users
+PUT    /api/users/5
+PATCH  /api/users/5
+DELETE /api/users/5`,
+explanation: "Les routes représentent une collection de ressources ou une ressource précise."
+},
+{
+title: "3. Exemple CRUD",
+code: `const express = require("express");
+const app = express();
+
+app.use(express.json());
+
+let users = [
+  { id: 1, nom: "Ali" },
+  { id: 2, nom: "Amine" }
+];
+
+app.get("/api/users", (req, res) => {
+  res.json(users);
+});
+
+app.get("/api/users/:id", (req, res) => {
+  const user = users.find(
+    u => u.id === Number(req.params.id)
+  );
+
+  if (!user) {
+    return res.status(404).json({
+      message: "Utilisateur introuvable"
+    });
+  }
+
+  res.json(user);
+});
+
+app.post("/api/users", (req, res) => {
+  const { nom } = req.body;
+
+  if (!nom || typeof nom !== "string") {
+    return res.status(400).json({
+      message: "Nom invalide"
+    });
+  }
+
+  const user = {
+    id: Date.now(),
+    nom
+  };
+
+  users.push(user);
+
+  res.status(201).json(user);
+});
+
+app.listen(3000);`,
+explanation: "Cet exemple illustre la lecture et la création de ressources. Les données sont conservées en mémoire et disparaissent lorsque le serveur redémarre."
+},
+{
+title: "4. Principes REST",
+list: [
+"Utiliser les méthodes HTTP de manière cohérente.",
+"Identifier les ressources avec des URL claires.",
+"Utiliser les codes de statut appropriés.",
+"Échanger des représentations de données, souvent en JSON.",
+"Documenter les routes et leurs paramètres."
+]
+}
+],
+objective: "Comprendre les principes REST et développer les opérations CRUD."
+},
+
+{
+title: "Bases de données",
+subtitle: "Persister les données et communiquer avec une base de données.",
+level: "Avancé",
+duration: "70 min",
+sections: [
+{
+title: "1. Pourquoi une base de données ?",
+text: "Les variables JavaScript conservent les données en mémoire pendant l'exécution du programme. Une base de données permet de conserver les informations durablement."
+},
+{
+title: "2. Les types de bases de données",
+list: [
+"Relationnelles : PostgreSQL, MySQL, SQLite.",
+"NoSQL : MongoDB.",
+"Les bases relationnelles organisent les données en tables.",
+"MongoDB utilise notamment des documents BSON."
+]
+},
+{
+title: "3. Exemple avec SQLite",
+text: "SQLite est une base relationnelle légère. Elle peut être utilisée pour découvrir les opérations SQL.",
+code: `CREATE TABLE utilisateurs (
+  id INTEGER PRIMARY KEY,
+  nom TEXT NOT NULL,
+  email TEXT UNIQUE
+);
+
+INSERT INTO utilisateurs (nom, email)
+VALUES ('Ali', 'ali@example.com');
+
+SELECT * FROM utilisateurs;`,
+explanation: "CREATE TABLE crée une table. INSERT ajoute un enregistrement. SELECT récupère les données."
+},
+{
+title: "4. Les opérations CRUD",
+list: [
+"Create : créer des données.",
+"Read : lire des données.",
+"Update : modifier des données.",
+"Delete : supprimer des données."
+]
+},
+{
+title: "5. Bonnes pratiques",
+list: [
+"Valider les données avant leur insertion.",
+"Utiliser des requêtes paramétrées.",
+"Ne pas exposer les informations sensibles.",
+"Prévoir une gestion des erreurs de connexion.",
+"Utiliser des migrations pour faire évoluer le schéma."
+]
+}
+],
+objective: "Comprendre la persistance et les principes de communication avec une base de données."
+},
+
+{
+title: "Authentification et sécurité",
+subtitle: "Protéger les applications et gérer les utilisateurs.",
+level: "Avancé",
+duration: "75 min",
+sections: [
+{
+title: "1. Authentification et autorisation",
+text: "L'authentification permet de vérifier l'identité d'un utilisateur. L'autorisation détermine les actions auxquelles cet utilisateur a le droit d'accéder."
+},
+{
+title: "2. Hachage des mots de passe",
+text: "Un mot de passe ne doit pas être stocké en clair. Utilisez une fonction de hachage adaptée aux mots de passe, comme Argon2 ou bcrypt, avec des paramètres correctement configurés."
+},
+{
+title: "3. Exemple de principe",
+code: `// Exemple pédagogique avec bcrypt
+
+const bcrypt = require("bcrypt");
+
+async function hacherMotDePasse(motDePasse) {
+  const hash = await bcrypt.hash(motDePasse, 12);
+  return hash;
+}
+
+async function verifierMotDePasse(motDePasse, hash) {
+  return bcrypt.compare(motDePasse, hash);
+}`,
+explanation: "bcrypt.hash() produit un hash adapté au stockage. bcrypt.compare() vérifie un mot de passe sans devoir récupérer le mot de passe original."
+},
+{
+title: "4. Protéger une API",
+list: [
+"Valider toutes les données reçues.",
+"Utiliser HTTPS en production.",
+"Ne jamais exposer les secrets dans le code source.",
+"Limiter les tentatives de connexion.",
+"Configurer correctement les cookies et les sessions.",
+"Mettre à jour les dépendances."
+]
+},
+{
+title: "5. Variables d'environnement",
+code: `// Installer dotenv
+// npm install dotenv
+
+require("dotenv").config();
+
+const port = process.env.PORT || 3000;
+
+console.log("Port :", port);`,
+explanation: "Les variables d'environnement permettent de séparer la configuration des informations codées en dur. Le fichier .env ne doit pas être publié dans un dépôt public."
+},
+{
+title: "6. Fichier .gitignore",
+code: `node_modules/
+.env
+*.log`,
+explanation: "Ce fichier indique à Git les éléments qui ne doivent pas être suivis par le dépôt."
+}
+],
+objective: "Comprendre les principes fondamentaux de sécurité d'une API."
+},
+
+{
+title: "Tests et déploiement",
+subtitle: "Vérifier la qualité du code et publier une application.",
+level: "Avancé",
+duration: "65 min",
+sections: [
+{
+title: "1. Pourquoi tester ?",
+text: "Les tests permettent de vérifier le comportement du programme, de détecter les régressions et de faciliter la maintenance."
+},
+{
+title: "2. Exemple de test avec Node.js",
+code: `const test = require("node:test");
+const assert = require("node:assert");
+
+function addition(a, b) {
+  return a + b;
+}
+
+test("addition de deux nombres", () => {
+  assert.strictEqual(addition(2, 3), 5);
+});`,
+explanation: "Le module node:test permet de créer des tests automatisés. Le module node:assert vérifie les résultats attendus."
+},
+{
+title: "3. Lancer les tests",
+code: `node --test`,
+explanation: "Cette commande exécute les tests reconnus par le test runner intégré de Node.js."
+},
+{
+title: "4. Préparer le déploiement",
+list: [
+"Vérifier que l'application démarre correctement.",
+"Configurer les variables d'environnement.",
+"Prévoir la gestion des erreurs.",
+"Utiliser un service d'hébergement compatible avec Node.js.",
+"Configurer les journaux et la surveillance.",
+"Ne pas publier les secrets."
+]
+},
+{
+title: "5. Port dynamique",
+code: `const express = require("express");
+const app = express();
+
+const PORT = process.env.PORT || 3000;
+
+app.get("/", (req, res) => {
+  res.send("Application en ligne !");
+});
+
+app.listen(PORT, () => {
+  console.log("Serveur actif sur le port " + PORT);
+});`,
+explanation: "De nombreuses plateformes fournissent le port via une variable d'environnement. L'application doit l'utiliser au lieu d'imposer un port fixe."
+}
+],
+objective: "Écrire des tests simples et préparer une application pour le déploiement."
+}
+
+];
+
+/* =========================================
+   PROJETS PRATIQUES
+========================================= */
+
+const projects = [
+{
+number: "PROJET 01",
+title: "Calculatrice en ligne de commande",
+level: "Débutant",
+description: "Créer une calculatrice fonctionnant directement dans le terminal.",
+skills: ["Variables et fonctions", "Conditions", "Modules Node.js"],
+steps: [
+"Créer un dossier calculatrice.",
+"Créer un fichier app.js.",
+"Créer des fonctions addition, soustraction, multiplication et division.",
+"Lire les opérations demandées par l'utilisateur.",
+"Traiter les erreurs et afficher le résultat.",
+"Tester plusieurs cas."
+],
+code: `function addition(a, b) {
+  return a + b;
+}
+
+function soustraction(a, b) {
+  return a - b;
+}
+
+console.log(addition(10, 5));
+console.log(soustraction(10, 5));`
+},
+{
+number: "PROJET 02",
+title: "Gestionnaire de fichiers",
+level: "Débutant / Intermédiaire",
+description: "Créer un programme qui enregistre et lit des informations dans un fichier JSON.",
+skills: ["Module fs", "JSON", "Async/Await"],
+steps: [
+"Créer un dossier gestionnaire.",
+"Créer un fichier data.json.",
+"Lire le contenu du fichier.",
+"Ajouter une nouvelle information.",
+"Enregistrer les modifications.",
+"Traiter le cas où le fichier est absent."
+],
+code: `const fs = require("node:fs/promises");
+
+async function ajouterUtilisateur(nom) {
+  let utilisateurs = [];
+
+  try {
+    const contenu = await fs.readFile(
+      "data.json",
+      "utf8"
+    );
+
+    utilisateurs = JSON.parse(contenu);
+  } catch (erreur) {
+    if (erreur.code !== "ENOENT") throw erreur;
+  }
+
+  utilisateurs.push({ nom });
+
+  await fs.writeFile(
+    "data.json",
+    JSON.stringify(utilisateurs, null, 2)
+  );
+}
+
+ajouterUtilisateur("Ali").catch(console.error);`
+},
+{
+number: "PROJET 03",
+title: "API REST de gestion des étudiants",
+level: "Intermédiaire",
+description: "Développer une API permettant de gérer une liste d'étudiants.",
+skills: ["Express.js", "Routes REST", "CRUD", "JSON"],
+steps: [
+"Initialiser le projet avec npm.",
+"Installer Express.",
+"Créer le serveur principal.",
+"Créer les routes GET et POST.",
+"Ajouter les routes PUT et DELETE.",
+"Valider les données reçues.",
+"Tester les routes avec un client HTTP."
+],
+code: `const express = require("express");
+const app = express();
+
+app.use(express.json());
+
+let etudiants = [];
+
+app.get("/api/etudiants", (req, res) => {
+  res.json(etudiants);
+});
+
+app.post("/api/etudiants", (req, res) => {
+  const { nom } = req.body;
+
+  if (!nom || typeof nom !== "string") {
+    return res.status(400).json({
+      message: "Nom obligatoire"
+    });
+  }
+
+  const etudiant = {
+    id: Date.now(),
+    nom
+  };
+
+  etudiants.push(etudiant);
+
+  res.status(201).json(etudiant);
+});
+
+app.listen(3000, () => {
+  console.log("API sur le port 3000");
+});`
+},
+{
+number: "PROJET 04",
+title: "API de gestion de tâches",
+level: "Avancé",
+description: "Concevoir une API de tâches avec persistance, validation et organisation du code.",
+skills: ["Express", "Base de données", "CRUD", "Sécurité"],
+steps: [
+"Définir le modèle d'une tâche.",
+"Créer une base de données.",
+"Organiser les routes et les contrôleurs.",
+"Créer les opérations CRUD.",
+"Valider les données.",
+"Ajouter une authentification.",
+"Écrire des tests.",
+"Préparer le déploiement."
+],
+code: `const tache = {
+  id: 1,
+  titre: "Apprendre Node.js",
+  terminee: false,
+  createdAt: new Date()
+};
+
+console.log(tache);`
+}
+];
+
+/* =========================================
+   NAVIGATION ET AFFICHAGE
+========================================= */
+
+const completed = new Set(
+  JSON.parse(localStorage.getItem("nodeAcademyCompleted") || "[]")
+);
+
+function saveProgress() {
+  localStorage.setItem(
+    "nodeAcademyCompleted",
+    JSON.stringify([...completed])
+  );
+  updateProgress();
+}
+
+function updateProgress() {
+  const percent = Math.round(
+    completed.size / lessons.length * 100
+  );
+
+  document.getElementById("progressText").textContent =
+    percent + "% terminé";
+
+  document.getElementById("topProgressBar").style.width =
+    percent + "%";
+
+  document.getElementById("completedCount").textContent =
+    completed.size + "/12";
+}
+
+function buildNavigation() {
+  const nav = document.getElementById("lessonNav");
+  const grid = document.getElementById("courseGrid");
+
+  nav.innerHTML = "";
+  grid.innerHTML = "";
+
+  lessons.forEach((lesson, index) => {
+    const done = completed.has(index);
+
+    const navItem = document.createElement("div");
+    navItem.className = "nav-link";
+    navItem.dataset.lesson = index;
+    navItem.innerHTML = `
+      <span class="nav-number">${String(index + 1).padStart(2,"0")}</span>
+      <span>${lesson.title}</span>
+      <span class="nav-check">${done ? "✓" : ""}</span>
+    `;
+
+    navItem.addEventListener("click", () => openLesson(index));
+    nav.appendChild(navItem);
+
+    const card = document.createElement("div");
+    card.className = "course-card";
+    card.dataset.search = (
+      lesson.title + " " + lesson.subtitle
+    ).toLowerCase();
+
+    card.innerHTML = `
+      <div class="course-icon">${String(index + 1).padStart(2,"0")}</div>
+      <div>
+        <h3>${lesson.title}</h3>
+        <p>${lesson.subtitle}</p>
+        <small>${lesson.level} · ${lesson.duration}
+          ${done ? " · ✓ Terminé" : ""}
+        </small>
+      </div>
+    `;
+
+    card.addEventListener("click", () => openLesson(index));
+    grid.appendChild(card);
+  });
+
+  updateProgress();
+}
+
+function showPage(page) {
+  const pages = {
+    home: "homePage",
+    lesson: "lessonPage",
+    projects: "projectsPage",
+    quiz: "quizPage",
+    glossary: "glossaryPage"
+  };
+
+  Object.values(pages).forEach(id => {
+    document.getElementById(id).classList.add("hidden");
+  });
+
+  document.getElementById(pages[page]).classList.remove("hidden");
+
+  document.querySelectorAll(".nav-link").forEach(link => {
+    link.classList.remove("active");
+  });
+
+  const selected = document.querySelector(
+    `.nav-link[data-page="${page}"]`
+  );
+
+  if (selected) selected.classList.add("active");
+
+  document.getElementById("sidebar").classList.remove("open");
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function openLesson(index) {
+  const lesson = lessons[index];
+
+  showPage("lesson");
+
+  document.getElementById("lessonBreadcrumb").textContent =
+    lesson.title;
+
+  const sectionsHTML = lesson.sections.map((section, i) => {
+    let html = `<h2>${section.title}</h2>`;
+
+    if (section.text) html += `<p>${section.text}</p>`;
+
+    if (section.list) {
+      html += `<ul>${section.list.map(item => `<li>${item}</li>`).join("")}</ul>`;
+    }
+
+    if (section.code) {
+      html += `
+        <div class="code-block">
+          <div class="code-top">
+            <span>JavaScript — Exemple ${i + 1}</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copier le code</button>
+          </div>
+          <pre><code>${escapeHTML(section.code)}</code></pre>
+        </div>
+      `;
+    }
+
+    if (section.explanation) {
+      html += `
+        <div class="info-box">
+          <strong>Explication</strong>
+          <p>${section.explanation}</p>
+        </div>
+      `;
+    }
+
+    return html;
+  }).join("");
+
+  const done = completed.has(index);
+
+  document.getElementById("lessonContent").innerHTML = `
+    <div class="lesson-header">
+      <div class="lesson-kicker">CHAPITRE ${String(index + 1).padStart(2,"0")}</div>
+      <h1>${lesson.title}</h1>
+      <p>${lesson.subtitle}</p>
+      <div class="lesson-meta">
+        <span class="meta-pill">${lesson.level}</span>
+        <span class="meta-pill">${lesson.duration}</span>
+        <span class="meta-pill">${lesson.sections.length} parties</span>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>Objectif pédagogique</strong>
+      <p>${lesson.objective}</p>
+    </div>
+
+    <div class="lesson-body">${sectionsHTML}</div>
+
+    <div class="lesson-footer">
+      <button class="btn btn-outline"
+        onclick="${index === 0 ? "showPage('home')" : `openLesson(${index - 1})`}">
+        ← Précédent
+      </button>
+
+      <button class="btn ${done ? "btn-outline" : "btn-green"}"
+        onclick="toggleComplete(${index})">
+        ${done ? "✓ Chapitre terminé" : "Marquer comme terminé"}
+      </button>
+
+      <button class="btn btn-green"
+        onclick="${index === lessons.length - 1 ? "showPage('projects')" : `openLesson(${index + 1})`}">
+        Suivant →
+      </button>
+    </div>
+  `;
+
+  document.querySelectorAll("[data-lesson]").forEach(item => {
+    item.classList.toggle(
+      "active",
+      Number(item.dataset.lesson) === index
+    );
+  });
+}
+
+function toggleComplete(index) {
+  if (completed.has(index)) {
+    completed.delete(index);
+  } else {
+    completed.add(index);
+  }
+
+  saveProgress();
+  buildNavigation();
+  openLesson(index);
+}
+
+function escapeHTML(str) {
+  return str.replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+/* =========================================
+   COPIE DU CODE
+========================================= */
+
+async function copyCode(button) {
+  const code = button.closest(".code-block")
+    .querySelector("code").textContent;
+
+  try {
+    await navigator.clipboard.writeText(code);
+    button.textContent = "Copié ✓";
+  } catch (error) {
+    const area = document.createElement("textarea");
+    area.value = code;
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.select();
+
+    try {
+      document.execCommand("copy");
+      button.textContent = "Copié ✓";
+    } catch (e) {
+      button.textContent = "Copie impossible";
+    }
+
+    area.remove();
+  }
+
+  setTimeout(() => {
+    button.textContent = "Copier le code";
+  }, 1800);
+}
+
+/* =========================================
+   PROJETS
+========================================= */
+
+function buildProjects() {
+  document.getElementById("projectList").innerHTML =
+    projects.map(project => `
+      <article class="project-card">
+        <div class="project-number">${project.number}</div>
+        <h3>${project.title}</h3>
+        <p>${project.description}</p>
+        <div class="lesson-meta">
+          <span class="meta-pill">${project.level}</span>
+        </div>
+
+        <h3 style="font-size:13px;margin-top:17px">Compétences</h3>
+        <ul>${project.skills.map(s => `<li>${s}</li>`).join("")}</ul>
+
+        <h3 style="font-size:13px">Étapes du projet</h3>
+        <ol>${project.steps.map(s => `<li>${s}</li>`).join("")}</ol>
+
+        <div class="code-block">
+          <div class="code-top">
+            <span>Extrait de code</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copier le code</button>
+          </div>
+          <pre><code>${escapeHTML(project.code)}</code></pre>
+        </div>
+      </article>
+    `).join("");
+}
+
+/* =========================================
+   QUIZ
+========================================= */
+
+const questions = [
+{
+q: "Quel est le rôle principal de Node.js ?",
+options: [
+"Créer uniquement des pages HTML",
+"Exécuter JavaScript en dehors du navigateur",
+"Remplacer le langage JavaScript",
+"Créer des images"
+],
+answer: 1,
+explanation: "Node.js permet d'exécuter JavaScript dans un environnement extérieur au navigateur."
+},
+{
+q: "Quelle commande affiche la version de Node.js ?",
+options: ["npm start", "node --version", "node install", "npm create"],
+answer: 1,
+explanation: "node --version affiche la version installée de Node.js."
+},
+{
+q: "Quel fichier contient les informations d'un projet npm ?",
+options: ["index.html", "style.css", "package.json", "server.txt"],
+answer: 2,
+explanation: "package.json contient les métadonnées, scripts et dépendances du projet."
+},
+{
+q: "Quel module permet de manipuler les fichiers ?",
+options: ["http", "fs", "path seulement", "express"],
+answer: 1,
+explanation: "Le module fs fournit des fonctions pour lire et écrire des fichiers."
+},
+{
+q: "Que fait await ?",
+options: [
+"Supprime une fonction",
+"Attend la résolution d'une Promise dans une fonction async",
+"Arrête définitivement Node.js",
+"Installe un package"
+],
+answer: 1,
+explanation: "await suspend l'exécution de la fonction async jusqu'à la résolution de la Promise."
+},
+{
+q: "Quel framework est souvent utilisé avec Node.js pour créer des API ?",
+options: ["Express", "Photoshop", "Excel", "Figma"],
+answer: 0,
+explanation: "Express est un framework web utilisé avec Node.js."
+},
+{
+q: "Quelle méthode HTTP est généralement utilisée pour récupérer une ressource ?",
+options: ["DELETE", "POST", "GET", "PATCH"],
+answer: 2,
+explanation: "GET permet de demander une représentation d'une ressource."
+},
+{
+q: "Quel code HTTP indique qu'une ressource n'existe pas ?",
+options: ["200", "201", "404", "500"],
+answer: 2,
+explanation: "404 signifie Not Found."
+},
+{
+q: "Quel middleware permet d'analyser les requêtes JSON dans Express ?",
+options: [
+"express.json()",
+"express.html()",
+"express.files()",
+"express.server()"
+],
+answer: 0,
+explanation: "express.json() analyse les corps de requête JSON."
+},
+{
+q: "Pourquoi utilise-t-on une base de données ?",
+options: [
+"Pour changer la couleur du site",
+"Pour conserver les données durablement",
+"Pour remplacer le serveur",
+"Pour supprimer JavaScript"
+],
+answer: 1,
+explanation: "Une base de données permet de stocker et retrouver les informations durablement."
+}
+];
+
+let quizAnswers = {};
+
+function buildQuiz() {
+  quizAnswers = {};
+
+  const container = document.getElementById("quizContainer");
+
+  container.innerHTML = questions.map((question, i) => `
+    <div class="quiz-card" id="question-${i}">
+      <div class="lesson-kicker">QUESTION ${i + 1} / ${questions.length}</div>
+      <div class="quiz-question">${question.q}</div>
+      ${question.options.map((option, j) => `
+        <button class="quiz-option"
+          onclick="answerQuiz(${i},${j})">
+          ${String.fromCharCode(65 + j)}. ${option}
+        </button>
+      `).join("")}
+      <div class="quiz-feedback" id="feedback-${i}"></div>
+    </div>
+  `).join("") + `
+    <button class="btn btn-green" onclick="finishQuiz()">
+      Calculer mon résultat
+    </button>
+    <div class="quiz-result" id="quizResult"></div>
+  `;
+}
+
+function answerQuiz(questionIndex, optionIndex) {
+  quizAnswers[questionIndex] = optionIndex;
+
+  const question = questions[questionIndex];
+  const card = document.getElementById("question-" + questionIndex);
+  const buttons = card.querySelectorAll(".quiz-option");
+
+  buttons.forEach((button, i) => {
+    button.classList.remove("correct", "wrong");
+
+    if (i === question.answer) {
+      button.classList.add("correct");
+    } else if (i === optionIndex) {
+      button.classList.add("wrong");
+    }
+
+    button.disabled = true;
+  });
+
+  const feedback = document.getElementById(
+    "feedback-" + questionIndex
+  );
+
+  feedback.textContent =
+    (optionIndex === question.answer ? "Bonne réponse ✓ " : "Réponse incorrecte. ") +
+    question.explanation;
+}
+
+function finishQuiz() {
+  const score = questions.reduce((total, question, i) => {
+    return total + (
+      quizAnswers[i] === question.answer ? 1 : 0
+    );
+  }, 0);
+
+  document.getElementById("quizResult").textContent =
+    `Votre résultat : ${score} / ${questions.length} — ` +
+    (score >= 8 ? "Très bon travail !" :
+     score >= 5 ? "Bon début, continuez à réviser." :
+     "Relisez les chapitres et réessayez.");
+}
+
+/* =========================================
+   GLOSSAIRE
+========================================= */
+
+const glossary = [
+["API", "Interface permettant à des applications de communiquer."],
+["Backend", "Partie d'une application qui fonctionne côté serveur."],
+["Callback", "Fonction transmise à une autre fonction pour être exécutée ultérieurement."],
+["CRUD", "Create, Read, Update, Delete : les quatre opérations de base sur les données."],
+["Endpoint", "Point d'accès d'une API, défini par une URL et une méthode HTTP."],
+["Framework", "Ensemble d'outils et de conventions facilitant le développement."],
+["HTTP", "Protocole de communication entre clients et serveurs web."],
+["JSON", "Format textuel d'échange de données."],
+["Middleware", "Fonction intermédiaire dans le traitement d'une requête."],
+["Module", "Fichier ou ensemble de fonctionnalités réutilisables."],
+["NPM", "Gestionnaire de paquets de l'écosystème Node.js."],
+["Promise", "Objet représentant le résultat futur d'une opération asynchrone."],
+["REST", "Style architectural utilisé pour concevoir des API."],
+["Route", "Association entre une URL, une méthode HTTP et un traitement."],
+["Serveur", "Programme qui reçoit et traite des requêtes."],
+["Asynchrone", "Mode d'exécution qui permet de poursuivre d'autres tâches pendant une attente."]
+];
+
+function buildGlossary() {
+  document.getElementById("glossaryContent").innerHTML =
+    `<div class="course-grid">` +
+    glossary.map(([term, definition]) => `
+      <article class="course-card">
+        <div class="course-icon">Aa</div>
+        <div>
+          <h3>${term}</h3>
+          <p>${definition}</p>
+        </div>
+      </article>
+    `).join("") +
+    `</div>`;
+}
+
+/* =========================================
+   RECHERCHE ET MENU
+========================================= */
+
+document.getElementById("searchInput").addEventListener("input", event => {
+  const value = event.target.value.toLowerCase().trim();
+
+  document.querySelectorAll(".course-card").forEach(card => {
+    card.classList.toggle(
+      "hidden",
+      !card.dataset.search.includes(value)
+    );
+  });
+});
+
+document.getElementById("menuBtn").addEventListener("click", () => {
+  document.getElementById("sidebar").classList.toggle("open");
+});
+
+document.querySelectorAll("[data-page]").forEach(link => {
+  link.addEventListener("click", () => {
+    showPage(link.dataset.page);
+  });
+});
+
+/* =========================================
+   INITIALISATION
+========================================= */
+
+buildNavigation();
+buildProjects();
+buildQuiz();
+buildGlossary();
+updateProgress();
+
+</script>
+</body>
+</html>
